@@ -8,21 +8,12 @@ export function calcutateMovement(origin, target) {
   let diffX = Math.abs(origin.x - target.x);
   let diffY = Math.abs(origin.y - target.y);
 
-  let type = (diffX > diffY) ? 'H' : 'V';
+  let isHorizontal = (diffX > diffY);
+  let prop = isHorizontal ? 'x' : 'y';
+  let type = isHorizontal ? 'H' : 'V';
+  let direction = (origin[prop] > target[prop]) ? '-' : '+';
 
-  if (type === 'H') {
-    if (origin.x > target.x) {
-      return { type,  direction: '-' };
-    } else {
-      return { type,  direction: '+' };
-    }
-  } else {
-    if (origin.y > target.y) {
-      return { type,  direction: '-' };
-    } else {
-      return { type,  direction: '+' };
-    }
-  }
+  return { type, direction };
 }
 
 

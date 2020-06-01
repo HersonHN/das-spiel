@@ -1,11 +1,11 @@
 
-import { smallDiff, calcutateMovement, pixelsMoved } from '../classes/game-helpers';
+import * as helpers from '../classes/game-helpers';
 
 
 export function grabStart({ event, inter }) {
   inter.resetValues();
   inter.grabbing = true;
-  inter.startingPoint = {
+  inter.start = {
     x: event.clientX,
     y: event.clientY,
   };
@@ -20,16 +20,19 @@ export function grabStop({ event, inter }) {
 }
 
 
-export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
+export function grabMove({ board, cell, event, inter }) {
   let { x, y } = { x: event.clientX, y: event.clientY };
 
   // if the cursor hasn't move enough, just ignore the event
-  if (smallDiff(x, inter.startingPoint.x) && smallDiff(y, inter.startingPoint.y)) {
+  if (
+    helpers.smallDiff(x, inter.start.x) &&
+    helpers.smallDiff(y, inter.start.y)
+  ) {
     return;
   }
 
   let firstTime = inter.setMovement(
-    calcutateMovement(inter.startingPoint, { x, y })
+    helpers.calcutateMovement(inter.start, { x, y })
   );
 
   // this select the list of cells to be moved
@@ -39,6 +42,6 @@ export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
       : board.returnCellsEqualAs({ type: 'H', row: cell.row });
   }
 
-  let pixels = pixelsMoved(inter.movement, inter.startingPoint, { x, y });
+  let pixels = helpers.pixelsMoved(inter.movement, inter.start, { x, y });
   inter.applyMovement(inter.cellsMoved, pixels, inter.movement);
 }

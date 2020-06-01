@@ -8,15 +8,10 @@ import * as helpers from '../classes/game-helpers';
 
 export class HTMLInterface {
 
-  constructor({ board, cellSize, span = 2 }) {
+  constructor({ board, cellSize = 50, span = 2 }) {
     this.board = board;
     this.cellSize = cellSize;
     this.span = span;
-
-    this.movement = {
-      direction: '',
-      type: ''
-    };
 
     this.ghostCell = null;
     this.resetValues();
@@ -26,7 +21,7 @@ export class HTMLInterface {
   resetValues() {
     this.grabbing = false;
     this.busy = false;
-    this.startingPoint = { x: 0, y: 0 };
+    this.start = { x: 0, y: 0 };
     this.movement = { direction: '', type: '' };
     this.cellsMoved = [];
   }
