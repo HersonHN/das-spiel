@@ -1,13 +1,12 @@
 
 export const COLORS = [
-  { name: 'blue' },
-  { name: 'crimson' },
-  { name: 'green' },
-  { name: 'orange' },
-  { name: 'pink' },
-  { name: 'teal' },
+  { name: 'blue',    color: '#001a6b', background: '#0066cc' },
+  { name: 'crimson', color: 'crimson', background: '#ff8f94' },
+  { name: 'green',   color: '#006900', background: '#00991f' },
+  { name: 'orange',  color: '#8e2f00', background: '#ff8b14' },
+  { name: 'pink',    color: '#600099', background: '#cc33ff' },
+  { name: 'teal',    color: '#53a2a4', background: '#85d4d5' },
 ];
-
 
 export const SYMBOLS = [
   { name: 'clover', icon: '♣', emoji: '🍀' },

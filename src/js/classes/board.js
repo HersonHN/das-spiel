@@ -9,7 +9,7 @@ export class Board {
     this.cols = cols;
     this.cells = [];
 
-    this.memory = {};
+    this.data = {};
 
     this.createCells();
   }

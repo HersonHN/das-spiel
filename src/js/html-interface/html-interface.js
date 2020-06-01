@@ -1,7 +1,10 @@
 
 import '../../css/components/board.css';
-import '../../css/components/colors.css';
-import { grabStart, grabStop, grabMove } from './events';
+
+import { Cell } from '../classes/cell';
+
+import * as events from './events';
+import * as helpers from '../classes/game-helpers';
 
 export class HTMLInterface {
 
@@ -15,6 +18,7 @@ export class HTMLInterface {
       type: ''
     };
 
+    this.ghostCell = null;
     this.resetValues();
   }
 
@@ -52,9 +56,9 @@ export class HTMLInterface {
     board.style.lineHeight = `${cellSize}px`;
     board.style.fontSize = `${cellSize / 2}px`;
 
-    // add the values to the board memory too
-    this.board.memory.width = width;
-    this.board.memory.height = height;
+    // add the values to the board data too
+    this.board.data.width = width;
+    this.board.data.height = height;
 
    return board;
   }
@@ -70,12 +74,7 @@ export class HTMLInterface {
       for (let nCol in row) {
         let cell = row[nCol];
 
-        let cellHTML = this.createCell(cell, {
-          row: +nRow,
-          col: +nCol,
-          cellSize: this.cellSize,
-          span: this.span,
-        });
+        let cellHTML = this.createCell();
 
         cell.element = cellHTML;
         this.syncCell(cell);
@@ -85,21 +84,29 @@ export class HTMLInterface {
       }
     }
 
+    // Ghost Cell
+    this.createGhost();
     this.addBoardEvents();
   }
 
 
-  createCell(cell, pos) {
+  createGhost() {
+    this.ghostCell = new Cell({ ghost: true });
+    this.ghostCell.element = this.createCell();
+    this.syncCell(this.ghostCell);
+    this.board.element.appendChild(this.ghostCell.element);
+  }
+
+
+  createCell() {
     // output element:
-    // <span class="cell color {color-name} {symbol-name}">
-    //     {symbol-icon}
-    // </span>
+    // <span style="{ color }">{symbol.icon}</span>
 
     let element = document.createElement('span');
     let width = this.cellSize;
     let height = this.cellSize;
 
-    element.classList.add('cell', 'color');
+    element.className = 'cell';
     element.style.width = `${width}px`;
     element.style.height = `${height}px`;
 
@@ -114,15 +121,19 @@ export class HTMLInterface {
     let top  = cell.row * (cellSize + span) + span;
     let left = cell.col * (cellSize + span) + span;
 
-    element.classList.remove([...element.classList]);
-    element.classList.add('cell', 'color', color.name, symbol.name);
     element.innerHTML = symbol.icon;
+
+    element.style.color = color.color;
+    element.style.background = color.background;
 
     element.style.top = `${top}px`;
     element.style.left = `${left}px`;
 
-    cell.memory.top = top;
-    cell.memory.left = left;
+    cell.data.topFixed = top;
+    cell.data.leftFixed = left;
+
+    cell.data.top = top;
+    cell.data.left = left;
   }
 
 
@@ -137,8 +148,8 @@ export class HTMLInterface {
 
 
   syncCellPosition(cell) {
-    cell.element.style.top = `${cell.memory.top}px`;
-    cell.element.style.left = `${cell.memory.left}px`;
+    cell.element.style.top = `${cell.data.top}px`;
+    cell.element.style.left = `${cell.data.left}px`;
   }
 
 
@@ -159,14 +170,14 @@ export class HTMLInterface {
     // GRAB
     cellHTML.addEventListener('mousedown', function (event) {
       if (inter.busy) return;
-      grabStart({ event, inter });
+      events.grabStart({ event, inter });
     });
 
     // MOVE
     cellHTML.addEventListener('mousemove', function (event) {
       if (inter.busy) return;
       if (!inter.grabbing) return;
-      grabMove({ board, cell, boardHTML, cellHTML, event, inter });
+      events.grabMove({ board, cell, boardHTML, cellHTML, event, inter });
     });
   }
 
@@ -176,10 +187,10 @@ export class HTMLInterface {
 
     // RELEASE
     document.body.addEventListener('mouseup', function (event) {
-      grabStop({ event, inter });
+      events.grabStop({ event, inter });
     });
     document.body.addEventListener('mouseleave', function (event) {
-      grabStop({ event, inter });
+      events.grabStop({ event, inter });
     });
   }
 
@@ -196,30 +207,39 @@ export class HTMLInterface {
 
 
   applyMovement(cells, pixels, movement) {
-    let cellProp;
-    let boardProp;
-
-    if (movement.type === 'H') {
-      cellProp = 'left';
-      boardProp = 'width';
-    } else {
-      cellProp = 'top';
-      boardProp = 'height';
-    }
-
-    let boardLimit = this.board.memory[boardProp];
+    let cellProp = (movement.type === 'H') ? 'left' : 'top';
+    let boardProp = (movement.type === 'H') ? 'width' : 'height';
+    let boardLimit = this.board.data[boardProp];
 
     for (let cell of cells) {
-      let newPostion = cell.memory[cellProp] + pixels;
+      let oldPosition = cell.data[`${cellProp}Fixed`];
+      let newPostion = oldPosition + pixels;
 
-      if (newPostion > boardLimit) {
-        newPostion -= boardLimit;
-      } else
-      if (newPostion < 0) {
-        newPostion += boardLimit
-      }
+      newPostion = helpers.limits(newPostion, 0, boardLimit);
+
+      cell.data[cellProp] = newPostion;
       cell.element.style[cellProp] = newPostion + 'px';
     }
+
+    this.syncGhost({ cells, cellProp });
+  }
+
+
+  syncGhost({ cells, cellProp }) {
+    let fullCellSize = this.cellSize + this.span;
+
+    let maxCell = helpers.getMax(cells, cellProp);
+    let minCell = helpers.getMin(cells, cellProp);
+
+    if (this.ghostCell.toString() !== maxCell.toString()) {
+      this.ghostCell.copyFrom(maxCell);
+      this.syncCell(this.ghostCell);
+    }
+
+    let ghostCellPosition = minCell.data[cellProp] - fullCellSize;
+    this.ghostCell.data[cellProp] = ghostCellPosition;
+
+    this.syncCellPosition(this.ghostCell);
   }
 
 }

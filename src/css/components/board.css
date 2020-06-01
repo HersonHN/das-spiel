@@ -16,6 +16,7 @@
   text-align: center;
   user-select: none;
   cursor: grab;
+  background-color: black;
 }
 
 .grabbing,

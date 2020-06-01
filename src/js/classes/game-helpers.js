@@ -12,15 +12,15 @@ export function calcutateMovement(origin, target) {
 
   if (type === 'H') {
     if (origin.x > target.x) {
-      return { type, direction: 'LEFT' };
+      return { type,  direction: '-' };
     } else {
-      return { type, direction: 'RIGHT' };
+      return { type,  direction: '+' };
     }
   } else {
     if (origin.y > target.y) {
-      return { type, direction: 'UP' };
+      return { type,  direction: '-' };
     } else {
-      return { type, direction: 'DOWN' };
+      return { type,  direction: '+' };
     }
   }
 }
@@ -32,4 +32,40 @@ export function pixelsMoved(movement, origin, target) {
   } else {
     return target.y - origin.y;
   }
+}
+
+
+export function getMax(cells, prop) {
+  let max = Number.MIN_SAFE_INTEGER;
+  let maxCell = null;
+
+  for (let cell of cells) {
+    if (cell.data[prop] > max) {
+      maxCell = cell;
+      max = cell.data[prop];
+    }
+  }
+
+  return maxCell;
+}
+
+export function getMin(cells, prop) {
+  let min = Number.MAX_SAFE_INTEGER;
+  let minCell = null;
+
+  for (let cell of cells) {
+    if (cell.data[prop] < min) {
+      minCell = cell;
+      min = cell.data[prop];
+    }
+  }
+
+  return minCell;
+}
+
+
+export function limits(value, lower, upper) {
+  if (value > upper) return value - upper;
+  if (value <= lower) return value + upper;
+  return value;
 }
