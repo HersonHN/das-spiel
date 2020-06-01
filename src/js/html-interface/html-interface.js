@@ -177,17 +177,14 @@ export class HTMLInterface {
     });
   }
 
-  changeMovement(newMovement) {
-    let firstTime = (this.movement.direction === '');
-    let same = newMovement.direction === this.movement.direction;
-
-    if (same) return { same, firstTime };
+  setMovement(newMovement) {
+    let fistTime = (this.movement.direction === '');
+    if (!fistTime) return fistTime;
 
     this.movement.type = newMovement.type;
     this.movement.direction = newMovement.direction;
-    this.movement.same = same;
 
-    return { same, firstTime };
+    return fistTime;
   }
 
   applyMovement(cells, pixels, movement) {

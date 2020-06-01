@@ -25,26 +25,19 @@ export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
     return;
   }
 
-  let movement = calcutateMovement(inter.startingPoint, { x, y });
-  let changedMovement = inter.changeMovement(movement);
-
-  // if the movement changes, reset the cell positions
-  if (!changedMovement.same && !changedMovement.firstTime) {
-    inter.busy = true;
-    inter.resyncPositions();
-  }
+  let firstTime = inter.setMovement(
+    calcutateMovement(inter.startingPoint, { x, y })
+  );
 
   // this select the list of cells to be moved
-  if (!changedMovement.same) {
-    inter.cellsMoved = (movement.type === 'V')
+  if (firstTime) {
+    inter.cellsMoved = (inter.movement.type === 'V')
       ? board.returnCellsEqualAs({ type: 'V', col: cell.col })
       : board.returnCellsEqualAs({ type: 'H', row: cell.row });
   }
 
-  let pixels = pixelsMoved(movement, inter.startingPoint, { x, y });
-
-  inter.applyMovement(inter.cellsMoved, pixels, movement);
+  let pixels = pixelsMoved(inter.movement, inter.startingPoint, { x, y });
+  inter.applyMovement(inter.cellsMoved, pixels, inter.movement);
 }
-
 
 
