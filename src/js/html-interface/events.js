@@ -1,4 +1,6 @@
 
+import { smallDiff, calcutateMovement } from '../classes/game-helpers';
+
 export function grabStart({ board, cell, boardHTML, cellHTML, event, inter }) {
   inter.grabbing = true;
   inter.startingPoint = {
@@ -32,28 +34,5 @@ export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
   inter.changeMovement(movement);
 }
 
-function smallDiff(n1, n2) {
-  return Math.abs(n1 - n2) < 11;
-}
 
-function calcutateMovement(origin, target) {
-  let diffX = Math.abs(origin.x - target.x);
-  let diffY = Math.abs(origin.y - target.y);
-
-  let type = (diffX > diffY) ? 'H' : 'V';
-
-  if (type == 'H') {
-    if (origin.x > target.x) {
-      return  { type, direction: 'LEFT' };
-    } else {
-      return  { type, direction: 'RIGHT' };
-    }
-  } else {
-    if (origin.y > target.y) {
-      return  { type, direction: 'UP' };
-    } else {
-      return  { type, direction: 'DOWN' };
-    }
-  }
-}
 
