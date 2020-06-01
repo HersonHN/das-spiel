@@ -9,17 +9,25 @@ export function calcutateMovement(origin, target) {
 
   let type = (diffX > diffY) ? 'H' : 'V';
 
-  if (type == 'H') {
+  if (type === 'H') {
     if (origin.x > target.x) {
-      return  { type, direction: 'LEFT' };
+      return { type, direction: 'LEFT' };
     } else {
-      return  { type, direction: 'RIGHT' };
+      return { type, direction: 'RIGHT' };
     }
   } else {
     if (origin.y > target.y) {
-      return  { type, direction: 'UP' };
+      return { type, direction: 'UP' };
     } else {
-      return  { type, direction: 'DOWN' };
+      return { type, direction: 'DOWN' };
     }
+  }
+}
+
+export function pixelsMoved(movement, origin, target) {
+  if (movement.type === 'H') {
+    return target.x - origin.x;
+  } else {
+    return target.y - origin.y;
   }
 }

@@ -1,38 +1,37 @@
 
-import { randomColor, randomSymbol } from './randomness';
+import { randomItem } from './randomness';
 
 export class Cell {
 
-  constructor({ row, col }, board) {
+  constructor({ row, col, board }) {
     this.row = row;
     this.col = col;
+    this.board = board;
 
+    // temporary variables modified through the game
+    this.memory = {};
+
+    this.color = this.selectRandomValues('color', { row, col });
+    this.symbol = this.selectRandomValues('symbol', { row, col });
+  }
+
+  selectRandomValues(type, { row, col }) {
     // do not include values from the left and upper cells in the randomness
+    let ignore = [];
 
-    // colors
-    let excludeColors = [];
     if (row > 0) {
-      let color = board[row - 1][col].color.name;
-      excludeColors.push(color);
-    }
-    if (col > 0) {
-      let color = board[row][col - 1].color.name;
-      excludeColors.push(color);
+      let cell = this.board.cells[row - 1][col];
+      let value = cell[type].name;
+      ignore.push(value);
     }
 
-    // symbols
-    let excludeSymbols = [];
-    if (row > 0) {
-      let symbol = board[row - 1][col].symbol.name;
-      excludeSymbols.push(symbol);
-    }
     if (col > 0) {
-      let symbol = board[row][col - 1].symbol.name;
-      excludeSymbols.push(symbol);
+      let cell = this.board.cells[row][col - 1];
+      let value = cell[type].name;
+      ignore.push(value);
     }
 
-    this.color = randomColor({ ignore: excludeColors });
-    this.symbol = randomSymbol({ ignore: excludeSymbols });
+    return randomItem(type, { ignore });
   }
 }
 

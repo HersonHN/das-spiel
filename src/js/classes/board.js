@@ -8,6 +8,8 @@ export class Board {
     this.cols = cols;
     this.cells = [];
 
+    this.memory = {};
+
     this.createCells();
   }
 
@@ -18,11 +20,26 @@ export class Board {
       this.cells.push(row);
 
       for (let nCol = 0; nCol < this.cols; nCol++) {
-        let cell = new Cell({ row: nRow, col: nCol }, this.cells);
+        let cell = new Cell({ row: nRow, col: nCol, board: this });
         row.push(cell);
       }
 
     }
+  }
 
+  returnCellsEqualAs(params) {
+    if (params.type === 'H') {
+      return this.cells[params.row].map(cell => cell);
+    }
+
+    if (params.type === 'V') {
+      let result = [];
+      for (let row of this.cells) {
+        result.push(row[params.col]);
+      }
+      return result;
+    }
+
+    return [];
   }
 }

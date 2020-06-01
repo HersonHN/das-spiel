@@ -1,12 +1,12 @@
 
 import { COLORS, SYMBOLS } from './game-constants';
 
-export function randomColor(params) {
-  return randomEntry(COLORS, params);
-}
-
-export function randomSymbol(params) {
-  return randomEntry(SYMBOLS, params);
+export function randomItem(type, params) {
+  if (type === 'color') {
+    return randomEntry(COLORS, params);
+  } else {
+    return randomEntry(SYMBOLS, params);
+  }
 }
 
 function randomEntry(array, { ignore }) {

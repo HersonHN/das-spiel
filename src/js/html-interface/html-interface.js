@@ -10,7 +10,20 @@ export class HTMLInterface {
     this.cellSize = cellSize;
     this.span = span;
 
-    this.movement = {};
+    this.movement = {
+      direction: '',
+      type: ''
+    };
+
+    this.resetValues();
+  }
+
+  resetValues() {
+    this.grabbing = false;
+    this.busy = false;
+    this.startingPoint = { x: 0, y: 0 };
+    this.movement = { direction: '', type: '' };
+    this.cellsMoved = [];
   }
 
   draw(parent) {
@@ -29,13 +42,17 @@ export class HTMLInterface {
     board.classList.add('board');
 
     let cellSize = this.cellSize;
-    let width = (this.cellSize + this.span) * this.board.cols + this.span;
-    let height = (this.cellSize + this.span) * this.board.rows + this.span;
+    let width = (this.cellSize + this.span) * this.board.cols;
+    let height = (this.cellSize + this.span) * this.board.rows;
 
-    board.style.width = `${width}px`;
-    board.style.height = `${height}px`;
+    board.style.width = `${width + this.span}px`;
+    board.style.height = `${height + this.span}px`;
     board.style.lineHeight = `${cellSize}px`;
     board.style.fontSize = `${cellSize / 2}px`;
+
+    // add the values to the board memory too
+    this.board.memory.width = width;
+    this.board.memory.height = height;
 
    return board;
   }
@@ -65,6 +82,9 @@ export class HTMLInterface {
         boardHTML.appendChild(cellHTML);
       }
     }
+
+    this.addBoardEvents();
+
   }
 
   createCell(cell, pos) {
@@ -97,33 +117,105 @@ export class HTMLInterface {
 
     element.style.top = `${top}px`;
     element.style.left = `${left}px`;
+
+    cell.memory.top = top;
+    cell.memory.left = left;
+  }
+
+  resync() {
+    for (let row of this.board.cells) {
+      for (let cell of row) {
+        this.syncCell(cell);
+      }
+    }
+
+    this.busy = false;
+  }
+
+
+  syncCellPosition(cell) {
+    cell.element.style.top = `${cell.memory.top}px`;
+    cell.element.style.left = `${cell.memory.left}px`;
+  }
+
+  resyncPositions() {
+    for (let row of this.board.cells) {
+      for (let cell of row) {
+        this.syncCellPosition(cell);
+      }
+    }
+
+    this.busy = false;
   }
 
   addCellEvents({ board, cell, boardHTML, cellHTML }) {
     let inter = this;
 
+    // GRAB
     cellHTML.addEventListener('mousedown', function (event) {
-      grabStart({ board, cell, boardHTML, cellHTML, event, inter });
+      if (inter.busy) return;
+      grabStart({ event, inter });
     });
 
-    document.body.addEventListener('mouseup', function (event) {
-      grabStop({ board, cell, boardHTML, cellHTML, event, inter });
-    });
-
-    document.body.addEventListener('mousemove', function (event) {
+    // MOVE
+    cellHTML.addEventListener('mousemove', function (event) {
+      if (inter.busy) return;
+      if (!inter.grabbing) return;
       grabMove({ board, cell, boardHTML, cellHTML, event, inter });
     });
-
   }
 
+  addBoardEvents() {
+    let inter = this;
+
+    // RELEASE
+    document.body.addEventListener('mouseup', function (event) {
+      grabStop({ event, inter });
+    });
+    document.body.addEventListener('mouseleave', function (event) {
+      grabStop({ event, inter });
+    });
+  }
 
   changeMovement(newMovement) {
-    if (newMovement.direction == this.movement.direction) return;
+    let firstTime = (this.movement.direction === '');
+    let same = newMovement.direction === this.movement.direction;
+
+    if (same) return { same, firstTime };
 
     this.movement.type = newMovement.type;
     this.movement.direction = newMovement.direction;
+    this.movement.same = same;
 
-    console.log(this.movement);
+    return { same, firstTime };
+  }
+
+  applyMovement(cells, pixels, movement) {
+    let cellProp;
+    let boardProp;
+
+    if (movement.type === 'H') {
+      cellProp = 'left';
+      boardProp = 'width';
+    } else {
+      cellProp = 'top';
+      boardProp = 'height';
+    }
+
+    let boardLimit = this.board.memory[boardProp];
+
+    for (let cell of cells) {
+      let newPostion = cell.memory[cellProp] + pixels;
+
+      if (newPostion > boardLimit) {
+        newPostion -= boardLimit;
+      } else
+      if (newPostion < 0) {
+        newPostion += boardLimit
+      }
+      cell.element.style[cellProp] = newPostion + 'px';
+    }
+
   }
 
 }
