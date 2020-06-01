@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.page-content {
+  width: 900px;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
