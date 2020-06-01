@@ -4,8 +4,7 @@
   "scripts": {
     "webpack": "webpack"
   },
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
     "babel-loader": "^8.1.0",
