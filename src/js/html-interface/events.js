@@ -1,6 +1,7 @@
 
 import { smallDiff, calcutateMovement, pixelsMoved } from '../classes/game-helpers';
 
+
 export function grabStart({ event, inter }) {
   inter.resetValues();
   inter.grabbing = true;
@@ -12,10 +13,12 @@ export function grabStart({ event, inter }) {
   document.body.classList.add('grabbing');
 }
 
+
 export function grabStop({ event, inter }) {
   inter.resetValues();
   document.body.classList.remove('grabbing');
 }
+
 
 export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
   let { x, y } = { x: event.clientX, y: event.clientY };
@@ -39,5 +42,3 @@ export function grabMove({ board, cell, boardHTML, cellHTML, event, inter }) {
   let pixels = pixelsMoved(inter.movement, inter.startingPoint, { x, y });
   inter.applyMovement(inter.cellsMoved, pixels, inter.movement);
 }
-
-

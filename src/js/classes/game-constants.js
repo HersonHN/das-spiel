@@ -8,6 +8,7 @@ export const COLORS = [
   { name: 'teal' },
 ];
 
+
 export const SYMBOLS = [
   { name: 'clover', icon: '♣', emoji: '🍀' },
   { name: 'flower', icon: '✿', emoji: '🌸' },

@@ -1,10 +1,10 @@
 
 import '../../css/components/board.css';
 import '../../css/components/colors.css';
-
 import { grabStart, grabStop, grabMove } from './events';
 
 export class HTMLInterface {
+
   constructor({ board, cellSize, span = 2 }) {
     this.board = board;
     this.cellSize = cellSize;
@@ -18,6 +18,7 @@ export class HTMLInterface {
     this.resetValues();
   }
 
+
   resetValues() {
     this.grabbing = false;
     this.busy = false;
@@ -25,6 +26,7 @@ export class HTMLInterface {
     this.movement = { direction: '', type: '' };
     this.cellsMoved = [];
   }
+
 
   draw(parent) {
     this.parent = parent;
@@ -34,8 +36,8 @@ export class HTMLInterface {
     parent.appendChild(boardHTML);
   }
 
-  createBoard() {
 
+  createBoard() {
     let board = document.createElement('section');
     this.board.element = board;
 
@@ -57,8 +59,8 @@ export class HTMLInterface {
    return board;
   }
 
-  addCells(boardHTML) {
 
+  addCells(boardHTML) {
     let board = this.board;
     let cells = this.board.cells;
 
@@ -84,8 +86,8 @@ export class HTMLInterface {
     }
 
     this.addBoardEvents();
-
   }
+
 
   createCell(cell, pos) {
     // output element:
@@ -103,6 +105,7 @@ export class HTMLInterface {
 
     return element;
   }
+
 
   syncCell(cell) {
     let { color, symbol, element } = cell;
@@ -122,13 +125,13 @@ export class HTMLInterface {
     cell.memory.left = left;
   }
 
+
   resync() {
     for (let row of this.board.cells) {
       for (let cell of row) {
         this.syncCell(cell);
       }
     }
-
     this.busy = false;
   }
 
@@ -137,6 +140,7 @@ export class HTMLInterface {
     cell.element.style.top = `${cell.memory.top}px`;
     cell.element.style.left = `${cell.memory.left}px`;
   }
+
 
   resyncPositions() {
     for (let row of this.board.cells) {
@@ -147,6 +151,7 @@ export class HTMLInterface {
 
     this.busy = false;
   }
+
 
   addCellEvents({ board, cell, boardHTML, cellHTML }) {
     let inter = this;
@@ -165,6 +170,7 @@ export class HTMLInterface {
     });
   }
 
+
   addBoardEvents() {
     let inter = this;
 
@@ -177,6 +183,7 @@ export class HTMLInterface {
     });
   }
 
+
   setMovement(newMovement) {
     let fistTime = (this.movement.direction === '');
     if (!fistTime) return fistTime;
@@ -186,6 +193,7 @@ export class HTMLInterface {
 
     return fistTime;
   }
+
 
   applyMovement(cells, pixels, movement) {
     let cellProp;
@@ -212,7 +220,6 @@ export class HTMLInterface {
       }
       cell.element.style[cellProp] = newPostion + 'px';
     }
-
   }
 
 }

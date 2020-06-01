@@ -3,6 +3,7 @@ export function smallDiff(n1, n2) {
   return Math.abs(n1 - n2) < 11;
 }
 
+
 export function calcutateMovement(origin, target) {
   let diffX = Math.abs(origin.x - target.x);
   let diffY = Math.abs(origin.y - target.y);
@@ -23,6 +24,7 @@ export function calcutateMovement(origin, target) {
     }
   }
 }
+
 
 export function pixelsMoved(movement, origin, target) {
   if (movement.type === 'H') {

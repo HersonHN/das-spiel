@@ -1,6 +1,7 @@
 
 import { Cell } from './cell';
 
+
 export class Board {
 
   constructor({ rows, cols }) {
@@ -12,6 +13,7 @@ export class Board {
 
     this.createCells();
   }
+
 
   createCells() {
 
@@ -26,6 +28,7 @@ export class Board {
 
     }
   }
+
 
   returnCellsEqualAs(params) {
     if (params.type === 'H') {

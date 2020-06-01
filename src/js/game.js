@@ -2,6 +2,7 @@
 import { Board } from './classes/board';
 import { HTMLInterface } from './html-interface/html-interface';
 
+
 init();
 
 function init() {

@@ -1,6 +1,7 @@
 
 import { randomItem } from './randomness';
 
+
 export class Cell {
 
   constructor({ row, col, board }) {
@@ -14,6 +15,7 @@ export class Cell {
     this.color = this.selectRandomValues('color', { row, col });
     this.symbol = this.selectRandomValues('symbol', { row, col });
   }
+
 
   selectRandomValues(type, { row, col }) {
     // do not include values from the left and upper cells in the randomness
