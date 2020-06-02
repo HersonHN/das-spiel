@@ -13,7 +13,10 @@ export function calcutateMovement(origin, target) {
   let type = isHorizontal ? 'H' : 'V';
   let direction = (origin[prop] > target[prop]) ? '-' : '+';
 
-  return { type, direction };
+  let cellProp = isHorizontal ? 'left' : 'top';
+  let boardProp = isHorizontal ? 'width' : 'height';
+
+  return { type, direction, cellProp, boardProp };
 }
 
 

@@ -12,6 +12,7 @@ export class HTMLInterface {
     this.board = board;
     this.cellSize = cellSize;
     this.span = span;
+    this.fullCellSize = cellSize + span;
 
     this.ghostCell = null;
     this.resetValues();
@@ -55,7 +56,7 @@ export class HTMLInterface {
     this.board.data.width = width;
     this.board.data.height = height;
 
-   return board;
+    return board;
   }
 
 
@@ -93,6 +94,15 @@ export class HTMLInterface {
   }
 
 
+  hideGhost() {
+    this.ghostCell.color.name = '';
+    this.ghostCell.symbol.name = '';
+    this.ghostCell.col = -999;
+    this.ghostCell.row = -999;
+    this.syncCell(this.ghostCell);
+  }
+
+
   createCell() {
     // output element:
     // <span style="{ color }">{symbol.icon}</span>
@@ -111,10 +121,10 @@ export class HTMLInterface {
 
   syncCell(cell) {
     let { color, symbol, element } = cell;
-    let { cellSize, span } = this;
+    let { fullCellSize, span } = this;
 
-    let top  = cell.row * (cellSize + span) + span;
-    let left = cell.col * (cellSize + span) + span;
+    let top  = (cell.row * fullCellSize) + span;
+    let left = (cell.col * fullCellSize) + span;
 
     element.innerHTML = symbol.icon;
 
@@ -194,16 +204,13 @@ export class HTMLInterface {
     let fistTime = (this.movement.direction === '');
     if (!fistTime) return fistTime;
 
-    this.movement.type = newMovement.type;
-    this.movement.direction = newMovement.direction;
-
+    this.movement = Object.assign({}, newMovement);
     return fistTime;
   }
 
 
   applyMovement(cells, pixels, movement) {
-    let cellProp = (movement.type === 'H') ? 'left' : 'top';
-    let boardProp = (movement.type === 'H') ? 'width' : 'height';
+    let { cellProp, boardProp } = movement;
     let boardLimit = this.board.data[boardProp];
 
     for (let cell of cells) {
@@ -221,8 +228,6 @@ export class HTMLInterface {
 
 
   syncGhost({ cells, cellProp }) {
-    let fullCellSize = this.cellSize + this.span;
-
     let maxCell = helpers.getMax(cells, cellProp);
     let minCell = helpers.getMin(cells, cellProp);
 
@@ -231,10 +236,38 @@ export class HTMLInterface {
       this.syncCell(this.ghostCell);
     }
 
-    let ghostCellPosition = minCell.data[cellProp] - fullCellSize;
+    let ghostCellPosition = minCell.data[cellProp] - this.fullCellSize;
     this.ghostCell.data[cellProp] = ghostCellPosition;
 
     this.syncCellPosition(this.ghostCell);
+  }
+
+
+  calcuateNewPositions() {
+    if (this.cellsMoved.length === 0) return;
+
+    this.busy = true;
+    this.grabbing = false;
+
+    let type = (this.movement.type === 'H') ? 'row' : 'col';
+    let prop = this.movement.cellProp;
+    let sorted = this.cellsMoved
+      .sort((cellA, cellB) => cellA.data[prop] - cellB.data[prop]);
+
+    // check the height of the higher element to calculate if it should be the first or the second
+    let [upperCell] = sorted;
+    let position = upperCell.data[prop];
+    let moveCell = (position > this.fullCellSize / 2);
+
+    if (moveCell) {
+      let lowerCell = sorted.pop();
+      sorted.unshift(lowerCell);
+    }
+
+    this.board.replaceRowOrColumn({ cells: sorted, type: type });
+    this.hideGhost();
+    this.resync();
+    this.resetValues();
   }
 
 }

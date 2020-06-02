@@ -45,4 +45,48 @@ export class Board {
 
     return [];
   }
+
+
+  replaceRowOrColumn({ cells, type }) {
+    let colors = cells.map(cell => cell.color);
+    let symbols = cells.map(cell => cell.symbol);
+
+    if (type === 'row') {
+      let row = cells[0].row;
+      this.replaceRow({ row, colors, symbols });
+    } else {
+      let col = cells[0].col;
+      this.replaceCol({ col, colors, symbols });
+    }
+  }
+
+
+  replaceRow({ row, colors, symbols }) {
+    let rowToChange = this.cells[row];
+
+    for (let n in rowToChange) {
+      let cell = rowToChange[n];
+
+      cell.color = colors[n];
+      cell.symbol = symbols[n];
+    }
+  }
+
+
+  replaceCol({ col, colors, symbols }) {
+
+    for (let row in this.cells) {
+      let cell = this.cells[row][col];
+
+      cell.color = colors[row];
+      cell.symbol = symbols[row];
+    }
+  }
+
+
+  toString() {
+    return this.cells
+      .map(row => row.join(' '))
+      .join('\n');
+  }
 }

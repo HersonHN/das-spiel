@@ -15,6 +15,7 @@ export function grabStart({ event, inter }) {
 
 
 export function grabStop({ event, inter }) {
+  inter.calcuateNewPositions();
   inter.resetValues();
   document.body.classList.remove('grabbing');
 }
