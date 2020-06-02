@@ -7,7 +7,7 @@ init();
 
 function init() {
   let board = new Board({ rows: 6, cols: 6 });
-  let inter = new HTMLInterface({ board, cellSize: 75, span: 3 });
+  let inter = new HTMLInterface({ board, autosize: true });
 
   let domElement = document.querySelector('.the-game');
   inter.draw(domElement);

@@ -3,26 +3,20 @@ import * as helpers from '../classes/game-helpers';
 
 
 export function grabStart({ event, inter }) {
+  if (inter.busy) return;
   inter.resetValues();
   inter.grabbing = true;
-  inter.start = {
-    x: event.clientX,
-    y: event.clientY,
-  };
+  inter.start = getPoint(event);
 
   document.body.classList.add('grabbing');
 }
 
 
-export function grabStop({ event, inter }) {
-  inter.calcuateNewPositions();
-  inter.resetValues();
-  document.body.classList.remove('grabbing');
-}
-
-
 export function grabMove({ board, cell, event, inter }) {
-  let { x, y } = { x: event.clientX, y: event.clientY };
+  if (inter.busy) return;
+  if (!inter.grabbing) return;
+
+  let { x, y } = getPoint(event);
 
   // if the cursor hasn't move enough, just ignore the event
   if (
@@ -46,3 +40,18 @@ export function grabMove({ board, cell, event, inter }) {
   let pixels = helpers.pixelsMoved(inter.movement, inter.start, { x, y });
   inter.applyMovement(inter.cellsMoved, pixels, inter.movement);
 }
+
+
+export function grabStop({ inter }) {
+  inter.calcuateNewPositions();
+  inter.resetValues();
+  document.body.classList.remove('grabbing');
+}
+
+
+function getPoint(event) {
+  // check if its a touch move
+  let point = event.touches ? event.touches[0] : event;
+  return { x: point.clientX, y: point.clientY };
+}
+

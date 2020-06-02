@@ -3,13 +3,21 @@ import '../../css/components/board.css';
 
 import { Cell } from '../classes/cell';
 
-import * as events from './events';
 import * as helpers from '../classes/game-helpers';
+import * as events from './events';
+import { listener, getBestSize } from './interface-helpers';
+
 
 export class HTMLInterface {
 
-  constructor({ board, cellSize = 50, span = 2 }) {
+  constructor({ board, autosize, cellSize = 50, span = 2 }) {
     this.board = board;
+    this.autosize = autosize;
+  
+    if (autosize) {
+      cellSize = getBestSize({ span, board });
+    }
+
     this.cellSize = cellSize;
     this.span = span;
     this.fullCellSize = cellSize + span;
@@ -30,10 +38,10 @@ export class HTMLInterface {
 
   draw(parent) {
     this.parent = parent;
-
-    let boardHTML = this.createBoard();
-    this.addCells(boardHTML);
-    parent.appendChild(boardHTML);
+    this.boardHTML = this.createBoard();
+    this.syncBoard();
+    this.addCells(this.boardHTML);
+    parent.appendChild(this.boardHTML);
   }
 
 
@@ -42,21 +50,24 @@ export class HTMLInterface {
     this.board.element = board;
 
     board.classList.add('board');
+    return board;
+  }
 
+
+  syncBoard() {
     let cellSize = this.cellSize;
+
     let width = (this.cellSize + this.span) * this.board.cols;
     let height = (this.cellSize + this.span) * this.board.rows;
 
-    board.style.width = `${width + this.span}px`;
-    board.style.height = `${height + this.span}px`;
-    board.style.lineHeight = `${cellSize}px`;
-    board.style.fontSize = `${cellSize / 2}px`;
+    this.boardHTML.style.width = `${width + this.span}px`;
+    this.boardHTML.style.height = `${height + this.span}px`;
+    this.boardHTML.style.lineHeight = `${cellSize}px`;
+    this.boardHTML.style.fontSize = `${cellSize / 2}px`;
 
     // add the values to the board data too
     this.board.data.width = width;
     this.board.data.height = height;
-
-    return board;
   }
 
 
@@ -74,7 +85,7 @@ export class HTMLInterface {
 
         cell.element = cellHTML;
         this.syncCell(cell);
-        this.addCellEvents({ board, cell, boardHTML, cellHTML });
+        this.addCellEvents({ board, cell, cellHTML });
 
         boardHTML.appendChild(cellHTML);
       }
@@ -119,7 +130,7 @@ export class HTMLInterface {
   }
 
 
-  syncCell(cell) {
+  syncCell(cell, forceFull) {
     let { color, symbol, element } = cell;
     let { fullCellSize, span } = this;
 
@@ -134,6 +145,11 @@ export class HTMLInterface {
     element.style.top = `${top}px`;
     element.style.left = `${left}px`;
 
+    if (forceFull) {
+      element.style.width = `${this.cellSize}px`;
+      element.style.height = `${this.cellSize}px`;
+    }
+
     cell.data.topFixed = top;
     cell.data.leftFixed = left;
 
@@ -142,13 +158,22 @@ export class HTMLInterface {
   }
 
 
-  resync() {
+  resync(forceFull) {
     for (let row of this.board.cells) {
       for (let cell of row) {
-        this.syncCell(cell);
+        this.syncCell(cell, forceFull);
       }
     }
     this.busy = false;
+  }
+
+
+  resyncAll() {
+    this.cellSize = getBestSize({ span: this.span, board: this.board });
+    this.fullCellSize = this.cellSize + this.span;
+    this.resync(true);
+    this.syncCell(this.ghostCell, true);
+    this.syncBoard();
   }
 
 
@@ -169,21 +194,19 @@ export class HTMLInterface {
   }
 
 
-  addCellEvents({ board, cell, boardHTML, cellHTML }) {
+  addCellEvents({ board, cell, cellHTML }) {
     let inter = this;
 
     // GRAB
-    cellHTML.addEventListener('mousedown', function (event) {
-      if (inter.busy) return;
+    listener(cellHTML, ['mousedown', 'touchstart'], function (event) {
       events.grabStart({ event, inter });
     });
 
     // MOVE
-    cellHTML.addEventListener('mousemove', function (event) {
-      if (inter.busy) return;
-      if (!inter.grabbing) return;
-      events.grabMove({ board, cell, boardHTML, cellHTML, event, inter });
+    listener(cellHTML, ['mousemove', 'touchmove'], function (event) {
+      events.grabMove({ board, cell, event, inter });
     });
+
   }
 
 
@@ -191,12 +214,17 @@ export class HTMLInterface {
     let inter = this;
 
     // RELEASE
-    document.body.addEventListener('mouseup', function (event) {
-      events.grabStop({ event, inter });
+    listener(document.body, ['mouseup', 'mouseleave', 'touchend'], function () {
+      events.grabStop({ inter });
     });
-    document.body.addEventListener('mouseleave', function (event) {
-      events.grabStop({ event, inter });
-    });
+
+
+    // RESIZE
+    if (this.autosize) {
+      listener(window, ['resize'], () => {
+        this.resyncAll();
+      });
+    }
   }
 
 
