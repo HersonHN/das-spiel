@@ -13,7 +13,7 @@ export class HTMLInterface {
   constructor({ board, autosize, cellSize = 50, span = 2 }) {
     this.board = board;
     this.autosize = autosize;
-  
+
     if (autosize) {
       cellSize = getBestSize({ span, board });
     }
@@ -259,7 +259,7 @@ export class HTMLInterface {
     let maxCell = helpers.getMax(cells, cellProp);
     let minCell = helpers.getMin(cells, cellProp);
 
-    if (this.ghostCell.toString() !== maxCell.toString()) {
+    if (!this.ghostCell.isSimilar(maxCell, 'full')) {
       this.ghostCell.copyFrom(maxCell);
       this.syncCell(this.ghostCell);
     }
@@ -296,6 +296,11 @@ export class HTMLInterface {
     this.hideGhost();
     this.resync();
     this.resetValues();
+  }
+
+
+  findGroups() {
+    let groups = this.board.findGroups();
   }
 
 }

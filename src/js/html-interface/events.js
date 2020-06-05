@@ -43,7 +43,11 @@ export function grabMove({ board, cell, event, inter }) {
 
 
 export function grabStop({ inter }) {
+  if (inter.busy) return;
+  if (!inter.grabbing) return;
+
   inter.calcuateNewPositions();
+  inter.findGroups();
   inter.resetValues();
   document.body.classList.remove('grabbing');
 }

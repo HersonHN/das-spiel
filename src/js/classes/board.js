@@ -89,4 +89,33 @@ export class Board {
       .map(row => row.join(' '))
       .join('\n');
   }
+
+
+  findGroups() {
+    let sameColor = this.findGroupBy('color');
+    let equal = this.findGroupBy('full');
+
+    let groups = { sameColor, equal };
+
+    if (sameColor.length || equal.length) {
+      console.clear();
+      console. log(JSON.stringify(groups, null, 4));
+    }
+  }
+
+
+  findGroupBy(comparison) {
+    let cell = this.cells[0][0];
+    let visited = {};
+    let groups = [];
+    do {
+      let group = cell.findGroup(comparison, visited);
+      if (group.length > 3) {
+        groups.push(group);
+      }
+      cell = cell.next();
+    } while(cell);
+
+    return groups;
+  }
 }

@@ -7,6 +7,7 @@ export class Cell {
   constructor({ row, col, board, ghost }) {
     this.row = row;
     this.col = col;
+    this.id = `(${row + 1}, ${col + 1})`;
     this.board = board;
     this.ghost = ghost;
 
@@ -27,6 +28,24 @@ export class Cell {
 
   toString() {
     return `[${this.color.name} ${this.symbol.name}]`;
+  }
+
+
+  isSimilar(that, comparison) {
+    if (comparison === 'full') {
+      return (this.color.name === that.color.name && this.symbol.name === that.symbol.name);
+    }
+
+    if (comparison === 'color') {
+      return (this.color.name === that.color.name);
+    }
+
+    if (comparison === 'color') {
+      return (this.symbol.name === that.symbol.name);
+    }
+
+    console.error(`No comparison type set for ${this} & ${that}`);
+    return false;
   }
 
 
@@ -59,6 +78,93 @@ export class Cell {
     }
 
     return randomItem(type, { ignore });
+  }
+
+
+  left() {
+    let sameRow = this.board.cells[this.row];
+    if (sameRow[this.col - 1]) {
+      return sameRow[this.col - 1];
+    }
+    return null;
+  }
+
+
+  right() {
+    let sameRow = this.board.cells[this.row];
+    if (sameRow[this.col + 1]) {
+      return sameRow[this.col + 1];
+    }
+    return null;
+  }
+
+
+  top() {
+    let rowBefore = this.board.cells[this.row - 1];
+    if (rowBefore) {
+      return rowBefore[this.col];
+    }
+
+    return null;
+  }
+
+
+  bottom() {
+    let rowAfter = this.board.cells[this.row + 1];
+    if (rowAfter) {
+      return rowAfter[this.col];
+    }
+    return null;
+  }
+
+
+  nextLine() {
+    let rowAfter = this.board.cells[this.row + 1];
+    if (rowAfter) {
+      return rowAfter[0];
+    }
+    return null;
+  }
+
+
+  next() {
+    if (this.right()) {
+      return this.right();
+    }
+    if (this.nextLine()) {
+      return this.nextLine();
+    }
+    return null;
+  }
+
+
+  boundaries() {
+    return [
+      this.top(), this.bottom(), this.left(), this.right()
+    ].filter(x => x);
+  }
+
+
+  findGroup(comparison, visited = {}, group = []) {
+    if (visited[this.id]) return [];
+
+    // marking as visited
+    visited[this.id] = true;
+
+    let boundaries = this.boundaries();
+
+    if (group.length == 0) {
+      group.push(this.id);
+    }
+
+    for (let cell of boundaries) {
+      if (this.isSimilar(cell, comparison) && !visited[cell.id]) {
+        group.push(cell.id);
+        cell.findGroup(comparison, visited, group);
+      }
+    }
+
+    return group;
   }
 }
 
