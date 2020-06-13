@@ -16,6 +16,7 @@ function source(path, sufix = '.js') {
 
 module.exports = {
   mode: 'development',
+  devtool: 'eval-source-map',
 
   entry: source('./src/js'),
 
@@ -43,8 +44,6 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: __dirname,
-              hmr: false,
-              sourceMap: false
             },
           },
           'css-loader',
@@ -55,13 +54,14 @@ module.exports = {
   },
 
   plugins: [
-    // new webpack.SourceMapDevToolPlugin({
-    //   filename: '[name].js.map'
-    // }),
+    new webpack.SourceMapDevToolPlugin({
+      filename: '[name].js.map'
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
       ignoreOrder: false,
+      sourcemaps: false,
     }),
   ],
 
@@ -78,7 +78,6 @@ module.exports = {
     port: 8000,
     watchContentBase: true,
     liveReload: true,
-    writeToDisk: true,
   }
 
 }
