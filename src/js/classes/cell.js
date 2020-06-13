@@ -9,7 +9,7 @@ export class Cell {
     this.col = col;
     this.id = `(${row + 1}, ${col + 1})`;
     this.board = board;
-    this.ghost = ghost;
+    this.ghost = !!ghost;
 
     // temporary variables modified through the game
     this.data = {};
@@ -40,7 +40,7 @@ export class Cell {
       return (this.color.name === that.color.name);
     }
 
-    if (comparison === 'color') {
+    if (comparison === 'symbol') {
       return (this.symbol.name === that.symbol.name);
     }
 

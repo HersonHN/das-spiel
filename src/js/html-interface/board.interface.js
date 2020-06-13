@@ -35,6 +35,9 @@ export class BoardInterface {
     this.start = { x: 0, y: 0 };
     this.movement = { direction: '', type: '' };
     this.cellsMoved = [];
+
+    this.lastPixelsMovement = 0;
+    this.moved = false;
   }
 
 
@@ -110,7 +113,7 @@ export class BoardInterface {
 
 
   resyncAll() {
-    this.cellSize = getBestSize({ span: this.span, board: this.board });
+    this.cellSize = Interface.getBestSize({ span: this.span, board: this.board });
     this.fullCellSize = this.cellSize + this.span;
     this.resync(true);
     this.ghostCell.sync(true);
@@ -157,6 +160,8 @@ export class BoardInterface {
     let { cellProp, boardProp } = movement;
     let boardLimit = this.board.data[boardProp];
 
+    this.lastPixelsMovement = pixels;
+
     for (let cell of cells) {
       cell.interface.applyMovement(pixels, cellProp, boardLimit);
     }
@@ -178,6 +183,11 @@ export class BoardInterface {
     this.ghostCell.cell.data[cellProp] = ghostCellPosition;
 
     this.ghostCell.syncPosition();
+  }
+
+
+  checkIfMoved() {
+    this.moved = (this.lastPixelsMovement >= this.cellSize / 2);
   }
 
 
@@ -205,17 +215,24 @@ export class BoardInterface {
     this.board.replaceRowOrColumn({ cells: sorted, type: type });
     this.ghostCell.hide();
     this.resync();
-    this.resetValues();
+    // this.resetValues();
   }
 
 
   findGroups() {
     let groups = this.board.findGroups();
-    let { sameColor, equal } = groups;
+    let { sameColors, equals } = groups;
 
-    if (sameColor.length || equal.length) {
-      console.clear();
-      console. log(JSON.stringify(groups, null, 4));
+    for (let group of sameColors) {
+      for (let cell of group) {
+        cell.interface.glow('dim');
+      }
+    }
+
+    for (let group of equals) {
+      for (let cell of group) {
+        cell.interface.glow('bright');
+      }
     }
   }
 

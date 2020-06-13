@@ -46,8 +46,13 @@ export function grabStop({ inter }) {
   if (inter.busy) return;
   if (!inter.grabbing) return;
 
+  inter.checkIfMoved();
   inter.calcuateNewPositions();
-  inter.findGroups();
+
+  if (inter.moved) {
+    inter.findGroups();
+  }
+
   inter.resetValues();
   document.body.classList.remove('grabbing');
 }

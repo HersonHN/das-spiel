@@ -8,6 +8,7 @@ export class Board {
     this.rows = rows;
     this.cols = cols;
     this.cells = [];
+    this.cellMap = {};
 
     this.data = {};
 
@@ -23,6 +24,7 @@ export class Board {
       for (let nCol = 0; nCol < this.cols; nCol++) {
         let cell = new Cell({ row: nRow, col: nCol, board: this });
         row.push(cell);
+        this.cellMap[cell.id] = cell;
       }
     }
   }
@@ -89,9 +91,20 @@ export class Board {
 
 
   findGroups() {
-    let sameColor = this.findGroupBy('color');
-    let equal = this.findGroupBy('full');
-    return { sameColor, equal };
+    let sameColors = this.findGroupBy('color');
+    let equals = this.findGroupBy('full');
+
+    // removing the `equals` from the `sameColor` when those are exactly the same
+    for (let eq of equals) {
+      let equalGroup = eq.join('');
+      sameColors = sameColors.filter(co => co.join('') !== equalGroup);
+    }
+
+    // returning the instances for everything
+    sameColors = this.cellInterFaces(sameColors);
+    equals = this.cellInterFaces(equals);
+
+    return { sameColors, equals };
   }
 
 
@@ -107,7 +120,14 @@ export class Board {
       cell = cell.next();
     } while(cell);
 
-    return groups;
+    return groups.sort();
+  }
+
+
+  cellInterFaces(groups) {
+    return groups.map(group =>
+      group.map(cellId => this.cellMap[cellId])
+    );
   }
 
 }

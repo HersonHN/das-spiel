@@ -117,4 +117,13 @@ export class CellInterface {
 
   }
 
+
+  glow(type) {
+    let className = `glow-${type}`;
+    let classList = this.element.classList;
+
+    classList.add(className);
+    setTimeout(()=> classList.remove(className), 1000);
+  }
+
 }
