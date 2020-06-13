@@ -187,7 +187,7 @@ export class BoardInterface {
 
 
   checkIfMoved() {
-    this.moved = (this.lastPixelsMovement >= this.cellSize / 2);
+    this.moved = (Math.abs(this.lastPixelsMovement) >= this.cellSize / 2);
   }
 
 
