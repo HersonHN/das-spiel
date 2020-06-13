@@ -4,13 +4,14 @@ import { Cell } from './cell';
 
 export class Board {
 
-  constructor({ rows, cols }) {
+  constructor({ rows, cols, data = null }) {
     this.rows = rows;
     this.cols = cols;
     this.cells = [];
     this.cellMap = {};
 
     this.data = {};
+    this.demoData = data;
 
     this.createCells();
   }
@@ -84,9 +85,12 @@ export class Board {
 
 
   toString() {
-    return this.cells
-      .map(row => row.join(' '))
-      .join('\n');
+    return JSON.stringify(this, null, 4);
+  }
+
+
+  toJSON() {
+    return this.cells;
   }
 
 

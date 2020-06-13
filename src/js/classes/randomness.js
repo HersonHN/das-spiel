@@ -10,6 +10,7 @@ export function randomItem(type, params) {
   }
 }
 
+
 function randomEntry(array, { ignore }) {
   let pool = array.filter(item => !ignore.includes(item.name));
 
@@ -17,3 +18,13 @@ function randomEntry(array, { ignore }) {
   let index = Math.floor(Math.random() * len);
   return pool[index];
 }
+
+
+export function notRandomItem(type, value) {
+  if (type === 'color') {
+    return COLORS.find(i => i.name === value);
+  } else {
+    return SYMBOLS.find(i => i.name === value);
+  }
+}
+

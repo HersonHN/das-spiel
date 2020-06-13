@@ -1,5 +1,5 @@
 
-import { randomItem } from './randomness';
+import { randomItem, notRandomItem } from './randomness';
 
 
 export class Cell {
@@ -20,14 +20,21 @@ export class Cell {
       this.color = { name: 'ghost' };
       this.symbol = { name: 'ghost' };
     } else {
-      this.color = this.selectRandomValues('color', { row, col });
-      this.symbol = this.selectRandomValues('symbol', { row, col });
+      this.selectValues();
     }
   }
 
 
   toString() {
     return `[${this.color.name} ${this.symbol.name}]`;
+  }
+
+
+  toJSON() {
+    return {
+      color: this.color.name,
+      symbol: this.symbol.name,
+    }
   }
 
 
@@ -59,7 +66,26 @@ export class Cell {
   }
 
 
-  selectRandomValues(type, { row, col }) {
+  selectValues() {
+    let { row, col } = this;
+
+    if (this.board.demoData) {
+      this.color  = this.selectNotRandomValue('color', { row, col });
+      this.symbol = this.selectNotRandomValue('symbol', { row, col });
+    } else {
+      this.color  = this.selectRandomValue('color', { row, col });
+      this.symbol = this.selectRandomValue('symbol', { row, col });
+    }
+  }
+
+
+  selectNotRandomValue(type, { row, col }) {
+    let value = this.board.demoData[row][col][type];
+    return notRandomItem(type, value);
+  }
+
+
+  selectRandomValue(type, { row, col }) {
     // do not include values from the left and upper cells in the randomness
     let ignore = [];
 

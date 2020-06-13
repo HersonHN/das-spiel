@@ -1,5 +1,3 @@
-import '../../css/components/board.css';
-
 import { Cell } from '../classes/cell';
 import { CellInterface } from './cell.interface';
 import * as Interface from './interface-helpers';
