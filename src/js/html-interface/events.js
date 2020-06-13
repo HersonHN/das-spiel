@@ -58,4 +58,3 @@ function getPoint(event) {
   let point = event.touches ? event.touches[0] : event;
   return { x: point.clientX, y: point.clientY };
 }
-

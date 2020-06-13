@@ -16,7 +16,6 @@ export class Board {
 
 
   createCells() {
-
     for (let nRow = 0; nRow < this.rows; nRow++) {
       let row = [];
       this.cells.push(row);
@@ -25,7 +24,6 @@ export class Board {
         let cell = new Cell({ row: nRow, col: nCol, board: this });
         row.push(cell);
       }
-
     }
   }
 
@@ -74,7 +72,6 @@ export class Board {
 
 
   replaceCol({ col, colors, symbols }) {
-
     for (let row in this.cells) {
       let cell = this.cells[row][col];
 
@@ -94,13 +91,7 @@ export class Board {
   findGroups() {
     let sameColor = this.findGroupBy('color');
     let equal = this.findGroupBy('full');
-
-    let groups = { sameColor, equal };
-
-    if (sameColor.length || equal.length) {
-      console.clear();
-      console. log(JSON.stringify(groups, null, 4));
-    }
+    return { sameColor, equal };
   }
 
 
@@ -118,4 +109,5 @@ export class Board {
 
     return groups;
   }
+
 }

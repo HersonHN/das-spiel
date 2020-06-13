@@ -166,11 +166,10 @@ export class Cell {
 
     return group;
   }
-}
 
+}
 
 function clone(obj) {
   return Object.assign({}, obj);
 }
-
 

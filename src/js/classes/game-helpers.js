@@ -43,6 +43,7 @@ export function getMax(cells, prop) {
   return maxCell;
 }
 
+
 export function getMin(cells, prop) {
   let min = Number.MAX_SAFE_INTEGER;
   let minCell = null;

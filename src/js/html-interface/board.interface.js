@@ -2,7 +2,7 @@ import '../../css/components/board.css';
 
 import { Cell } from '../classes/cell';
 import { CellInterface } from './cell.interface';
-import { listener, getBestSize } from './interface-helpers';
+import * as Interface from './interface-helpers';
 import * as events from './events';
 import * as helpers from '../classes/game-helpers';
 
@@ -14,7 +14,7 @@ export class BoardInterface {
     this.autosize = autosize;
 
     if (autosize) {
-      cellSize = getBestSize({ span, board });
+      cellSize = Interface.getBestSize({ span, board });
     }
 
     this.cellSize = cellSize;
@@ -133,13 +133,13 @@ export class BoardInterface {
     let inter = this;
 
     // RELEASE
-    listener(document.body, ['mouseup', 'mouseleave', 'touchend'], function () {
+    Interface.listener(document.body, ['mouseup', 'mouseleave', 'touchend'], function () {
       events.grabStop({ inter });
     });
 
     // RESIZE
     if (this.autosize) {
-      listener(window, ['resize'], () => { this.resyncAll() });
+      Interface.listener(window, ['resize'], () => { this.resyncAll() });
     }
   }
 
@@ -211,6 +211,12 @@ export class BoardInterface {
 
   findGroups() {
     let groups = this.board.findGroups();
+    let { sameColor, equal } = groups;
+
+    if (sameColor.length || equal.length) {
+      console.clear();
+      console. log(JSON.stringify(groups, null, 4));
+    }
   }
 
 }

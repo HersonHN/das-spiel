@@ -1,6 +1,5 @@
 
-import { listener, getBestSize } from './interface-helpers';
-
+import * as Interface from './interface-helpers';
 import * as helpers from '../classes/game-helpers';
 import * as events from './events';
 
@@ -13,6 +12,7 @@ export class CellInterface {
 
     cell.interface = this;
   }
+
 
   draw() {
     let element = this.createCell();
@@ -106,17 +106,15 @@ export class CellInterface {
     let element = this.element;
 
     // GRAB
-    listener(element, ['mousedown', 'touchstart'], function (event) {
+    Interface.listener(element, ['mousedown', 'touchstart'], function (event) {
       events.grabStart({ event, inter });
     });
 
     // MOVE
-    listener(element, ['mousemove', 'touchmove'], function (event) {
+    Interface.listener(element, ['mousemove', 'touchmove'], function (event) {
       events.grabMove({ board, cell, event, inter });
     });
 
   }
-
-
 
 }
