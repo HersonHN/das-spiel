@@ -8,7 +8,7 @@ import * as events from './events';
 import { listener, getBestSize } from './interface-helpers';
 
 
-export class HTMLInterface {
+export class BoardInterface {
 
   constructor({ board, autosize, cellSize = 50, span = 2 }) {
     this.board = board;

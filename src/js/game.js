@@ -1,13 +1,13 @@
 
 import { Board } from './classes/board';
-import { HTMLInterface } from './html-interface/html-interface';
+import { BoardInterface } from './html-interface/board.interface';
 
 
 init();
 
 function init() {
   let board = new Board({ rows: 6, cols: 6 });
-  let inter = new HTMLInterface({ board, autosize: true });
+  let inter = new BoardInterface({ board, autosize: true });
 
   let domElement = document.querySelector('.the-game');
   inter.draw(domElement);
