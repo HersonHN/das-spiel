@@ -1,3 +1,4 @@
+const Path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -5,10 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 function source(path, sufix = '.js') {
   return glob.sync(`${path}/*${sufix}`)
     .reduce((obj, fullpath) => {
-      let regex = new RegExp(`${sufix}$`);
-      let file = fullpath.replace(regex, '').split('/');
-      file = file[file.length - 1];
-      obj[file] = fullpath;
+      let name = Path.basename(fullpath, sufix);
+      obj[name] = fullpath;
       return obj;
     }, {});
 }
@@ -21,8 +20,10 @@ module.exports = {
   entry: source('./src/js'),
 
   output: {
+    path: __dirname + '/dist',
     filename: '[name].js',
-    path: __dirname + '/dist'
+    sourceMapFilename: '[name].map',
+    chunkFilename: '[id].js'
   },
 
   module: {
@@ -42,7 +43,8 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: __dirname,
-              hmr: false
+              hmr: false,
+              sourceMap: false
             },
           },
           'css-loader',
@@ -52,12 +54,10 @@ module.exports = {
     ],
   },
 
-  watch: true,
-
   plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[name].map'
-    }),
+    // new webpack.SourceMapDevToolPlugin({
+    //   filename: '[name].js.map'
+    // }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
@@ -69,6 +69,16 @@ module.exports = {
     hints: false,
     maxEntrypointSize: 512000,
     maxAssetSize: 512000
+  },
+
+  devServer: {
+    contentBase: __dirname,
+    publicPath: '/dist/',
+    compress: false,
+    port: 8000,
+    watchContentBase: true,
+    liveReload: true,
+    writeToDisk: true,
   }
 
 }
