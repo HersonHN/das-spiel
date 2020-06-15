@@ -1,0 +1,12 @@
+/*
+EmojiSymbols Font (c)blockworks - Kenichi Kaneko
+http://emojisymbols.com/
+*/
+
+@font-face {
+  font-family: 'plain-emoji';
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('../fonts/emoji.woff') format('woff');
+}

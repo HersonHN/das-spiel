@@ -26,5 +26,5 @@ function height() {
 
 
 export function listener(who, events, callback) {
-  events.forEach(event => who.addEventListener(event, callback, { passive: true }));
+  events.forEach(event => who.addEventListener(event, callback));
 }

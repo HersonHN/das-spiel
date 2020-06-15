@@ -3,7 +3,13 @@ import { Level } from './classes/level';
 import { LevelInterface } from './html-interface/level.interface';
 
 
-init();
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(init);
+} else {
+  init();
+}
+
+
 
 function init() {
   let gameBoardDOM = document.querySelector('.game-board');
