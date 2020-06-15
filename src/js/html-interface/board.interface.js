@@ -6,6 +6,8 @@ import * as Interface from './interface-helpers';
 import * as events from './events';
 import * as helpers from '../classes/game-helpers';
 
+import { REAPPEAR_DELAY } from '../classes/game-constants';
+
 
 export class BoardInterface {
 
@@ -29,15 +31,18 @@ export class BoardInterface {
   }
 
 
-  resetValues() {
+  resetValues(params = {}) {
     this.grabbing = false;
-    this.busy = false;
     this.start = { x: 0, y: 0 };
     this.movement = { direction: '', type: '' };
     this.cellsMoved = [];
 
     this.lastPixelsMovement = 0;
     this.moved = false;
+
+    if (!params.maybeStillBusy) {
+      this.busy = false;
+    }
   }
 
 
@@ -223,19 +228,27 @@ export class BoardInterface {
     let groups = this.board.findGroups();
     let { sameColors, equals } = groups;
 
-    for (let group of sameColors) {
-      for (let cell of group) {
-        cell.interface.glow('dim');
-      }
-    }
+    this.board.level.accountMovement({
+      normal: sameColors,
+      extra: equals,
+    });
 
-    for (let group of equals) {
-      for (let cell of group) {
-        cell.interface.glow('bright');
-      }
-    }
+    if (!sameColors.length && !equals.length) return;
+
+    this.animateCells(groups);
+  }
 
 
+  animateCells({ sameColors, equals }) {
+    this.busy = true;
+    helpers.wait(REAPPEAR_DELAY)
+      .then(() => { this.busy = false });
+
+    let dims = helpers.joinArrays(sameColors);
+    let brights = helpers.joinArrays(equals);
+
+    CellInterface.glow(dims, 'dim');
+    CellInterface.glow(brights, 'bright');
   }
 
 }

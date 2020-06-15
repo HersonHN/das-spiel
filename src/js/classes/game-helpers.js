@@ -64,3 +64,19 @@ export function limits(value, lower, upper) {
   if (value <= lower) return value + upper;
   return value;
 }
+
+
+export function joinArrays(...groupOfArrays) {
+  let results = [];
+  for (let group of groupOfArrays) {
+    results = results.concat(...group);
+  }
+
+  return results;
+}
+
+export function wait(nMicroSecconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, nMicroSecconds);
+  });
+}

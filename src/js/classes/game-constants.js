@@ -16,3 +16,11 @@ export const SYMBOLS = [
   { name: 'spade',  icon: '♠', emoji: '🗡' },
   { name: 'star',   icon: '★', emoji: '🌟' },
 ];
+
+export const REAPPEAR_DELAY = 1000;
+
+export const CHANGE_CELL_DELAY = 1000;
+
+export const NORMAL_CELL_POINTS = 50;
+
+export const EXTRA_CELL_POINTS = 500;

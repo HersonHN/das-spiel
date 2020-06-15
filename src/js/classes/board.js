@@ -4,12 +4,13 @@ import { Cell } from './cell';
 
 export class Board {
 
-  constructor({ rows, cols, data = null }) {
+  constructor({ rows, cols, level, data = null }) {
     this.rows = rows;
     this.cols = cols;
+    this.level = level;
+
     this.cells = [];
     this.cellMap = {};
-
     this.data = {};
     this.demoData = data;
 

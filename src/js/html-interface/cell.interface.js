@@ -2,6 +2,7 @@
 import * as Interface from './interface-helpers';
 import * as helpers from '../classes/game-helpers';
 import * as events from './events';
+import { REAPPEAR_DELAY } from '../classes/game-constants';
 
 export class CellInterface {
 
@@ -118,12 +119,20 @@ export class CellInterface {
   }
 
 
-  glow(type) {
+  static glow(cells, type) {
     let className = `glow-${type}`;
-    let classList = this.element.classList;
 
-    classList.add(className);
-    setTimeout(()=> classList.remove(className), 1000);
+    let elements = cells.map(cell => cell.interface.element);
+
+    for (let el of elements) {
+      el.classList.add(className);
+    }
+
+    helpers.wait(REAPPEAR_DELAY).then(() => {
+      for (let el of elements) {
+        el.classList.remove(className);
+      }
+    });
   }
 
 }

@@ -9,10 +9,13 @@ export class Cell {
     this.col = col;
     this.id = `(${row + 1}, ${col + 1})`;
     this.board = board;
-    this.ghost = !!ghost;
 
-    // temporary variables modified through the game
-    this.data = {};
+    if (ghost) {
+      this.ghost = ghost;
+    }
+
+    this.interface = null;
+    this.data = {};  // variables modified through the game
 
     if (ghost) {
       this.row = -99;
@@ -22,6 +25,14 @@ export class Cell {
     } else {
       this.selectValues();
     }
+  }
+
+
+  regenerate() {
+    this.color  = this.selectRandomValue('color');
+    this.symbol = this.selectRandomValue('symbol');
+
+    this.interface.sync();
   }
 
 
@@ -67,43 +78,30 @@ export class Cell {
 
 
   selectValues() {
+    if (this.board.demoData) {
+      this.color  = this.selectNotRandomValue('color');
+      this.symbol = this.selectNotRandomValue('symbol');
+    } else {
+      this.color  = this.selectRandomValue('color');
+      this.symbol = this.selectRandomValue('symbol');
+    }
+  }
+
+
+  selectNotRandomValue(prop) {
     let { row, col } = this;
 
-    if (this.board.demoData) {
-      this.color  = this.selectNotRandomValue('color', { row, col });
-      this.symbol = this.selectNotRandomValue('symbol', { row, col });
-    } else {
-      this.color  = this.selectRandomValue('color', { row, col });
-      this.symbol = this.selectRandomValue('symbol', { row, col });
-    }
+    let value = this.board.demoData[row][col][prop];
+    return notRandomItem(prop, value);
   }
 
 
-  selectNotRandomValue(type, { row, col }) {
-    let value = this.board.demoData[row][col][type];
-    return notRandomItem(type, value);
-  }
-
-
-  selectRandomValue(type, { row, col }) {
-    // do not include values from the left and upper cells in the randomness
-    let ignore = [];
-
-    if (this.board) {
-      if (row > 0) {
-        let cell = this.board.cells[row - 1][col];
-        let value = cell[type].name;
-        ignore.push(value);
-      }
-
-      if (col > 0) {
-        let cell = this.board.cells[row][col - 1];
-        let value = cell[type].name;
-        ignore.push(value);
-      }
-    }
-
-    return randomItem(type, { ignore });
+  selectRandomValue(prop) {
+    // do not include values from boundaries on the randomness
+    let ignore = this.boundaries()
+      .map(cell => cell[prop].name);
+  
+    return randomItem(prop, { ignore });
   }
 
 

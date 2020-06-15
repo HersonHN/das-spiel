@@ -53,7 +53,7 @@ export function grabStop({ inter }) {
     inter.findGroups();
   }
 
-  inter.resetValues();
+  inter.resetValues({ maybeStillBusy: true });
   document.body.classList.remove('grabbing');
 }
 
