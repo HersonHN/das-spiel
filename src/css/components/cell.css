@@ -8,27 +8,66 @@
   cursor: grab;
   background-color: black;
 
-  opacity: 1;
-  box-shadow: 0 0 0 0;
-  transform: scale(1);
+  animation-name: appear;
+  animation-duration: .3s;
+  animation-direction: alternate;
 
-  transition:
-    opacity     linear .2s,
-    box-shadow  linear .3s;
 }
 
 .cell.glow-dim {
+  animation-name: dissapear;
+  animation-duration: .45s;
+
   opacity: 0.001;
-  box-shadow: 0px 0px 5px 5px inset;
+  box-shadow: 0px 0px 100px 100px inset;
+
 }
 
 .cell.glow-bright {
-  opacity: 0.001;
-  box-shadow: 0px 0px 40px 40px inset;
-  transform: scale(.5) rotate(359deg);
+  animation-name: rotate-and-dissapear;
+  animation-duration: .45s;
 
-  transition:
-    opacity     linear .5s,
-    box-shadow  linear .3s,
-    transform   linear .7s;
+  opacity: 0.001;
+  box-shadow: 0px 0px 100px 100px inset;
+  transform: rotate(360deg);
 }
+
+@keyframes appear {
+  from { opacity: 0.001; }
+  to { opacity: 1; }
+}
+
+
+@keyframes dissapear {
+  from {
+    opacity: 1;
+    box-shadow: 0 0 0 0 inset;
+  }
+  75% {
+    opacity: .9;
+    box-shadow: 0px 0px 100px 100px inset;
+  }
+  to {
+    opacity: 0.001;
+    box-shadow: 0px 0px 100px 100px inset;
+  }
+}
+
+@keyframes rotate-and-dissapear {
+  from {
+    opacity: 1;
+    box-shadow: 0 0 0 0 inset;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: .5;
+    box-shadow: 0px 0px 100px 100px inset;
+    transform: rotate(180deg);
+  }
+  to {
+    opacity: 0.001;
+    box-shadow: 0px 0px 100px 100px inset;
+    transform: rotate(360deg);
+  }
+}
+
