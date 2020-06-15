@@ -1,5 +1,7 @@
 import { Cell } from '../classes/cell';
+
 import { CellInterface } from './cell.interface';
+
 import * as Interface from './interface-helpers';
 import * as events from './events';
 import * as helpers from '../classes/game-helpers';
@@ -232,6 +234,8 @@ export class BoardInterface {
         cell.interface.glow('bright');
       }
     }
+
+
   }
 
 }
