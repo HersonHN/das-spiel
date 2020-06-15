@@ -12,11 +12,29 @@ function source(path, sufix = '.js') {
     }, {});
 }
 
+let isProd = (process.env.NODE_ENV === 'production')
+
+let plugins = [
+  new MiniCssExtractPlugin({
+    filename: '[name].css',
+    chunkFilename: '[id].css',
+    ignoreOrder: false,
+    sourcemaps: false,
+  }),
+];
+
+if (isProd) {
+  let sourceMaps = new webpack.SourceMapDevToolPlugin({
+    filename: '[name].js.map'
+  });
+
+  plugins.unshift(sourceMaps);
+}
 
 
 module.exports = {
-  mode: 'development',
-  devtool: 'eval-source-map',
+  mode: process.env.NODE_ENV || 'development',
+  devtool: (isProd) ? false : 'eval-source-map',
 
   entry: source('./src/js'),
 
@@ -53,17 +71,7 @@ module.exports = {
     ],
   },
 
-  plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[name].js.map'
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-      ignoreOrder: false,
-      sourcemaps: false,
-    }),
-  ],
+  plugins: plugins,
 
   performance: {
     hints: false,
