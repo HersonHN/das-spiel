@@ -1,5 +1,4 @@
 
-import { data } from '../demo/demo';
 import { Board } from './board';
 
 import * as helpers from './game-helpers';
@@ -7,17 +6,19 @@ import * as constants from './game-constants';
 
 export class Level {
 
-  constructor() {
-    this.interface = null;
+  constructor({ number }) {
+    this.number = number;
     this.points = 0;
     this.movements = 0;
+
 
     this.board = new Board({
       rows: 6,
       cols: 6,
-      data,
       level: this,
     });
+
+    this.interface = null;
   }
 
 

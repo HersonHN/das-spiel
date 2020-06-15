@@ -8,8 +8,31 @@ html, body {
 .page-content {
   margin: auto;
   font-family: sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  align-items: center;
 }
 
-h1 {
-  text-align: center;
+.game-board {
+  flex-grow: 1;
+}
+
+.level-info {
+  padding: 1rem;
+  min-width: 12rem;
+  font-family: monospace;
+  font-size: 1.3rem;
+  white-space: pre;
+}
+
+@media (orientation: landscape) {
+  .page-content { flex-direction: row; }
+}
+
+@media (orientation: portrait) {
+  .page-content { flex-direction: column; }
+  .level-info { min-width: 0; }
 }

@@ -3,7 +3,6 @@
   box-sizing: content-box;
   position: relative;
   overflow: hidden;
-  margin: auto;
   border: 5px rgb(128, 128, 128, .4) solid;
   border-radius: 10px;
 }

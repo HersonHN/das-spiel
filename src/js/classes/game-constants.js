@@ -17,9 +17,9 @@ export const SYMBOLS = [
   { name: 'star',   icon: '★', emoji: '🌟' },
 ];
 
-export const REAPPEAR_DELAY = 1000;
+export const REAPPEAR_DELAY = 500;
 
-export const CHANGE_CELL_DELAY = 1000;
+export const CHANGE_CELL_DELAY = 500;
 
 export const NORMAL_CELL_POINTS = 50;
 

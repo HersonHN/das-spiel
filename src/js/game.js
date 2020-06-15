@@ -6,9 +6,11 @@ import { LevelInterface } from './html-interface/level.interface';
 init();
 
 function init() {
-  let domElement = document.querySelector('.the-game');
+  let gameBoardDOM = document.querySelector('.game-board');
+  let levelInfoDOM = document.querySelector('.level-info');
 
-  let level = new Level();
+  let level = new Level({ number: 1 });
   let inter = new LevelInterface({ level });
-  inter.draw(domElement);
+
+  inter.draw({ gameBoardDOM, levelInfoDOM });
 }
