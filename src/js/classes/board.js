@@ -98,10 +98,11 @@ export class Board {
     let sameColors = this.findGroupBy('color');
     let equals = this.findGroupBy('full');
 
+
     // removing the `equals` from the `sameColor` when those are exactly the same
     for (let eq of equals) {
       let equalGroup = eq.join('');
-      sameColors = sameColors.filter(co => co.join('') !== equalGroup);
+      sameColors = sameColors.filter(co => !contains(co.join(''), equalGroup) );
     }
 
     // returning the instances for everything
@@ -134,4 +135,8 @@ export class Board {
     );
   }
 
+}
+
+function contains(big, small) {
+  return big.indexOf(small) > -1;
 }
