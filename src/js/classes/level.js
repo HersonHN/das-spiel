@@ -1,4 +1,5 @@
 
+import { data } from '../demo/demo';
 import { Board } from './board';
 
 import * as helpers from './game-helpers';
@@ -13,9 +14,10 @@ export class Level {
 
 
     this.board = new Board({
-      rows: 6,
+    rows: 6,
       cols: 6,
       level: this,
+      data
     });
 
     this.interface = null;

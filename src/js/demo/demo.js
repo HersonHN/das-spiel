@@ -1,11 +1,14 @@
 
-export const data = [
+let isProd = (process.env.NODE_ENV === 'production');
+let data;
+
+if (!isProd) data = [
   [
     { color: 'blue',    symbol: 'heart' },
     { color: 'pink',    symbol: 'spade' },
-    { color: 'green',   symbol: 'clover' },
+    { color: 'green',   symbol: 'diamond' },
     { color: 'teal',    symbol: 'spade' },
-    { color: 'pink',    symbol: 'clover' },
+    { color: 'pink',    symbol: 'diamond' },
     { color: 'teal',    symbol: 'spade' }
   ],
   [
@@ -21,23 +24,23 @@ export const data = [
     { color: 'green',   symbol: 'star' },
     { color: 'green',   symbol: 'star' },
     { color: 'crimson', symbol: 'spade' },
-    { color: 'teal',    symbol: 'clover' },
+    { color: 'teal',    symbol: 'diamond' },
     { color: 'orange',  symbol: 'music' }
   ],
   [
     { color: 'orange',  symbol: 'star' },
     { color: 'orange',  symbol: 'flower' },
-    { color: 'green',   symbol: 'clover' },
+    { color: 'green',   symbol: 'diamond' },
     { color: 'teal',    symbol: 'flower' },
-    { color: 'pink',    symbol: 'clover' },
-    { color: 'teal',    symbol: 'clover' }
+    { color: 'pink',    symbol: 'diamond' },
+    { color: 'teal',    symbol: 'diamond' }
   ],
   [
     { color: 'blue',    symbol: 'spade' },
     { color: 'pink',    symbol: 'heart' },
-    { color: 'crimson', symbol: 'clover' },
+    { color: 'crimson', symbol: 'diamond' },
     { color: 'orange',  symbol: 'heart' },
-    { color: 'teal',    symbol: 'clover' },
+    { color: 'teal',    symbol: 'diamond' },
     { color: 'orange',  symbol: 'heart' }
   ],
   [
@@ -45,7 +48,9 @@ export const data = [
     { color: 'pink',    symbol: 'heart' },
     { color: 'crimson', symbol: 'star' },
     { color: 'crimson', symbol: 'spade' },
-    { color: 'teal',    symbol: 'clover' },
+    { color: 'teal',    symbol: 'diamond' },
     { color: 'orange',  symbol: 'spade' }
   ]
 ];
+
+export { data as data };
