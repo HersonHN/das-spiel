@@ -4,6 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  height: 100%;
 }
 
 body {
@@ -11,6 +12,7 @@ body {
 }
 
 .page-content {
+  height: 100%;
   margin: auto;
   font-family: sans-serif, 'plain-emoji';
 
@@ -22,7 +24,7 @@ body {
   overflow: hidden;
 }
 
-.game-board {
+.spacer {
   flex-grow: 1;
 }
 
@@ -36,6 +38,8 @@ body {
 
 @media (orientation: landscape) {
   .page-content { flex-direction: row; }
+  .spacer { flex-grow: 0; }
+  .game-board { flex-grow: 1; }
 }
 
 @media (orientation: portrait) {
