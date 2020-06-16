@@ -1,24 +1,19 @@
 
-import { data } from '../demo/demo';
-import { Board } from './board';
-
 import * as helpers from './game-helpers';
 import * as constants from './game-constants';
 
 export class Level {
 
-  constructor({ number }) {
-    this.number = number;
-    this.points = 0;
-    this.movements = 0;
+  constructor({ number, points, movements, board }) {
+    this.number = number || 1;
+    this.points = points || 0;
+    this.movements = movements || 0;
 
-
-    this.board = new Board({
-    rows: 6,
-      cols: 6,
-      level: this,
-      data
-    });
+    // Connects with Board (see Board constructor)
+    this.board = board;
+    if (this.board) {
+      this.board.level = this;
+    }
 
     this.interface = null;
   }
@@ -50,6 +45,8 @@ export class Level {
     for (let cell of cellList) {
       cell.regenerate();
     }
+
+    this.interface.afterNewCells();
   }
 
 

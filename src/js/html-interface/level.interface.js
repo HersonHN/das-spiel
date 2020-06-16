@@ -1,29 +1,30 @@
 
-import { BoardInterface } from './board.interface';
+import { saveLevel, listener } from './interface-helpers';
+
 
 export class LevelInterface {
 
   constructor({ level }) {
+    if (!level) {
+      throw 'You need to provide a level for the level interface';
+    }
     this.level = level;
     level.interface = this;
-
-    this.boardInterface = new BoardInterface({
-      board: level.board,
-      autosize: true
-    });
 
     this.element = null;
   }
 
 
-  draw({ gameBoardDOM, levelInfoDOM }) {
-    this.boardInterface.draw(gameBoardDOM);
-    this.element = levelInfoDOM;
+  draw(element) {
+    this.element = element;
     this.sync();
+    this.addEvents();
   }
 
 
   sync() {
+    let output = this.element.querySelector('.output');
+
     let movements = Number(this.level.movements).toLocaleString();
     let points = Number(this.level.points).toLocaleString();
     let number = Number(this.level.number).toLocaleString();
@@ -33,6 +34,23 @@ export class LevelInterface {
       `Movements: ${movements}\n` +
       `Points:    ${points}`
 
-    this.element.innerHTML = content;
+    output.innerHTML = content;
   }
+
+
+  afterNewCells() {
+    saveLevel({ level: this.level });
+  }
+
+
+  addEvents() {
+    let button = this.element.querySelector('.new-game');
+
+    listener(button, ['click'], () => {
+      if (!confirm('Restart the game?')) return;
+      localStorage.clear();
+      location.reload();
+    });
+  }
+
 }

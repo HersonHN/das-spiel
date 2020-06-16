@@ -30,10 +30,15 @@ body {
 }
 
 .level-info {
-  padding: 1rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.level-info .output {
+  text-align: left;
+  padding: 1rem 0;
   min-width: 12rem;
   font-family: monospace;
-  font-size: 1.3rem;
   white-space: pre;
 }
 
@@ -45,5 +50,5 @@ body {
 
 @media (orientation: portrait) {
   .page-content { flex-direction: column; }
-  .level-info { min-width: 0; }
+  .level-info .output { min-width: 0; }
 }

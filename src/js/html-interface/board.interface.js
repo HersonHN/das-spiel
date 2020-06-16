@@ -12,9 +12,14 @@ import { REAPPEAR_DELAY } from '../classes/game-constants';
 export class BoardInterface {
 
   constructor({ board, autosize, cellSize = 50, span = 2 }) {
+    if (!board) {
+      throw 'You need to provide a board for the board interface';
+    }
     this.board = board;
-    this.autosize = autosize;
+    this.board.interface = this;
 
+
+    this.autosize = autosize;
     if (autosize) {
       cellSize = Interface.getBestSize({ span, board });
     }
@@ -25,7 +30,6 @@ export class BoardInterface {
 
     this.ghostCell = null;
     this.container = null;
-    this.cellInterface = CellInterface;
 
     this.resetValues();
   }

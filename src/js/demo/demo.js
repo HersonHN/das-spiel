@@ -1,8 +1,8 @@
 
 let isProd = (process.env.NODE_ENV === 'production');
-let data;
+let demo;
 
-if (!isProd) data = [
+if (!isProd) demo = [
   [
     { color: 'blue',    symbol: 'heart' },
     { color: 'pink',    symbol: 'spade' },
@@ -53,4 +53,4 @@ if (!isProd) data = [
   ]
 ];
 
-export { data as data };
+export { demo as demo };

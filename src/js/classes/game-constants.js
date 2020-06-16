@@ -24,3 +24,5 @@ export const CHANGE_CELL_DELAY = 500;
 export const NORMAL_CELL_POINTS = 50;
 
 export const EXTRA_CELL_POINTS = 500;
+
+export const STORAGE_FORMAT = 'v1';

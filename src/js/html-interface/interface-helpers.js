@@ -1,4 +1,6 @@
 
+import { STORAGE_FORMAT } from '../classes/game-constants';
+
 
 export function getBestSize({ span, board }) {
   let w = width();
@@ -27,4 +29,42 @@ function height() {
 
 export function listener(who, events, callback) {
   events.forEach(event => who.addEventListener(event, callback));
+}
+
+
+export function saveLevel({ level }) {
+  let board = level.board;
+
+  let data = {
+    points: level.points,
+    movements: level.movements,
+    number: level.number,
+    board: board
+  };
+
+  let json = JSON.stringify(data);
+
+  localStorage.setItem('level', json);
+  localStorage.setItem('level-version', STORAGE_FORMAT);
+}
+
+
+export function loadLevel() {
+  let json = localStorage.getItem('level');
+  let version = localStorage.getItem('level-version');
+
+  if (!json) return {};
+
+  if (version !== STORAGE_FORMAT) {
+    return {};
+  }
+
+  try {
+    json = JSON.parse(json);
+  } catch (error) {
+    localStorage.clear();
+    return {};
+  }
+
+  return json;
 }

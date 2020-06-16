@@ -8,8 +8,14 @@ export class Board {
   constructor({ rows, cols, level, data = null }) {
     this.rows = rows;
     this.cols = cols;
-    this.level = level;
 
+    // Connects with Level (see Level constructor)
+    this.level = level;
+    if (this.level) {
+      this.level.board = this;
+    }
+
+    this.interface = null;
     this.cells = [];
     this.cellMap = {};
     this.data = {};
@@ -138,6 +144,3 @@ export class Board {
 
 }
 
-function contains(big, small) {
-  return big.indexOf(small) > -1;
-}
