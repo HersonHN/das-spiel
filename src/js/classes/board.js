@@ -1,5 +1,6 @@
 
 import { Cell } from './cell';
+import { containsArray } from './game-helpers';
 
 
 export class Board {
@@ -102,8 +103,7 @@ export class Board {
 
     // removing the `equals` from the `sameColor` when those are exactly the same
     for (let eq of equals) {
-      let equalGroup = eq.join('');
-      sameColors = sameColors.filter(co => !contains(co.join(''), equalGroup) );
+      sameColors = sameColors.filter(co => !containsArray({ big: co, small: eq }));
     }
 
     // returning the instances for everything

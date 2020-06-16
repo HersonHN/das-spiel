@@ -75,8 +75,31 @@ export function joinArrays(...groupOfArrays) {
   return results;
 }
 
+
 export function wait(nMicroSecconds) {
   return new Promise(function (resolve) {
     setTimeout(resolve, nMicroSecconds);
   });
+}
+
+
+export function containsArray({ big, small, comparison }) {
+  // Check if the `big` array contains all elements in the `small` array
+  // compares them with the `comparison` function.
+  // Elements order don't matter
+
+  if (!comparison) {
+    comparison = (a, b) => a === b;
+  }
+
+  let result = true;
+
+  for (let item of small) {
+    let found = big.find(x => comparison(x, item));
+    if (!found) {
+      return false;
+    }
+  }
+
+  return result;
 }
